@@ -2,10 +2,5 @@ nguage: python
 python:
           - "3.6"
 
-install: true
-
 script: 
-  - python main.py
-
-env:
-          - CODECOV_TOKEN='dafe83cc-3a71-4fc1-98bc-6b9d7f0b0d2f'
+  - python trivial_code.py
