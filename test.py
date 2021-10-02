@@ -8,8 +8,7 @@ Created on Sat Oct  2 15:23:15 2021
 
 import unittest
 
-from my_sum import sum
-
+from test import sum
 
 class TestSum(unittest.TestCase):
     def test_list_int(self):
