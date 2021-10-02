@@ -1,6 +1,6 @@
-language: python
+nguage: python
 python:
-  - "3.6"
+          - "3.6"
 
 script: 
   - python trivial_code.py
