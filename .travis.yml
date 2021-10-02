@@ -1,8 +1,13 @@
 language: python
-python: "3.6"
 
-install : true
+python:
+    - "3.6"
 
-script: 
-  - python main.py
+install:
+    pip install -r requirements.txt
 
+script:
+    - pytest -s --cov=test_sum trivial_code.py
+
+after_success:
+    - codecov
