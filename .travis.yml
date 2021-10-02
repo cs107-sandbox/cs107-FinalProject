@@ -1,6 +1,9 @@
-nguage: python
+language: python
 python:
-          - "3.6"
+  - "3.6"
+
+install: true
 
 script: 
-  - python trivial_code.py
+  - python main.py
+
