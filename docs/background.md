@@ -2,7 +2,7 @@
 
 
 ## 1. The Chain Rule
-$$y = f(g(h(x)))$$
+$y = f(g(h(x)))$
 From inside to out side: 
 $$w1 = h(x)$$
 $$w2 = g(w1)$$
