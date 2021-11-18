@@ -10,9 +10,8 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url = 'https://github.com/cs107-sandbox/cs107-FinalProject',
     install_requires = [
-        'AutomaticDifferentiation @ git+ssh://git@github.com/cs107-sandbox/cs107-FinalProject',
-        ]
-    install_requires=['numpy', 'pytest', 'pip'],
+        'AutomaticDifferentiation @ git+ssh://git@github.com/cs107-sandbox/cs107-FinalProject'
+        ],
     license ='MIT',
     package_dir = {"":"src"},
     packages = setuptools.find_packages(where='src'),
