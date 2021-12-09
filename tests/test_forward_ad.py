@@ -1,5 +1,3 @@
-
-
 from src.AutomaticDifferentiation import AutoDiff
 from src.AutomaticDifferentiation import ForwardFunctions
 import pytest
@@ -255,7 +253,6 @@ class TestFunctions:
         Y = AutoDiff(np.array([1,3]), der=[1,1], label=["y1","y2"])
         f = ForwardFunctions([X * 3, Y * 4])
         assert f.values == [[6.0],[4.0]]
-#Todo: check if this needs to work with vector*vector or vector+vector
         
     def test_rmul_val(self):
         """check that __rmul__ has been overwritten correctly"""
@@ -409,7 +406,7 @@ class TestFunctions:
         y = AutoDiff(np.pi / 2, der=1, label="y")
         f = ForwardFunctions([x.sin(), (x + y).sin()])
         
-        assert_almost_equal(f.jacobians,[[-1,0],[0,0]])        
+        assert_almost_equal(f.jacobians,[[0,0],[-1,-1]])        
         
     def test_sin_label(self):
         """check that sin function has been correctly implemented"""
@@ -639,67 +636,92 @@ class TestFunctions:
 
     ##########################################
     # logistic
-#TODO: check function accuracy
-    def test_log_val(self):
+    def test_logistic_val(self):
         """check that sin function has been correctly implemented"""
-        x = AutoDiff(2, der=1, label="x")
-        y = AutoDiff(3, der=1, label="y")
+        x = AutoDiff(0.5, der=1, label="x")
+        y = AutoDiff(0.8, der=1, label="y")
         f = ForwardFunctions([x.logistic(), y.logistic()])
-        f.values
         
-        np.log(2)
-        np.log(3)
+        xval = 1/ (1 + np.exp(-0.5))
+        yval = 1/ (1 + np.exp(-0.8))
         
-        assert abs(f.val - 7.3890561) < e
+        assert_almost_equal(f.values, [[xval], [yval]]) 
         
-    def test_log_der(self):
+    def test_logistic_der(self):
         """check that sin function has been correctly implemented"""
-        value = 2.0
-        x = AutoDiff(value, der=1, label="x")
-        f = x.exp()
-        e = 10**(-6)
+        x = AutoDiff(0.5, der=1, label="x")
+        y = AutoDiff(0.8, der=1, label="y")
+        f = ForwardFunctions([x.logistic(), y.logistic()])
         
-        assert abs(f.der - 7.3890561) < e
+        xval = 1/ (1 + np.exp(-0.5))
+        yval = 1/ (1 + np.exp(-0.8))
         
-    def test_log_label(self):
+        xder = xval * (1-xval)
+        yder = yval * (1-yval)
+        
+        assert_almost_equal(f.jacobians, [[xder, 0],[0, yder]])
+        
+    def test_logistic_label(self):
         """check that sin function has been correctly implemented"""
-        value = 2.0
-        x = AutoDiff(value, der=1, label="x")
-        f = x.exp()
-        assert f.label == 'x'    
+        x = AutoDiff(0.5, der=1, label="x")
+        y = AutoDiff(0.8, der=1, label="y")
+        f = ForwardFunctions([x.logistic(), y.logistic()])
+        assert f.labels ==  ['x','y']     
     
     ##########################################
-    # logistic with base
+    # log 
 #TODO: check function accuracy
     def test_ln_val(self):
         """check that sin function has been correctly implemented"""
         x = AutoDiff(2, der=1, label="x")
         y = AutoDiff(3, der=1, label="y")
-        f = ForwardFunctions([x.logistic(), y.logistic()])
-        f.values
-        
-        np.log(2)
-        np.log(3)
-        
-        assert abs(f.val - 7.3890561) < e
+        f = ForwardFunctions([x.ln(), y.ln()])
+        assert_almost_equal(f.values,[[np.log(2)],[np.log(3)]])
         
     def test_ln_der(self):
         """check that sin function has been correctly implemented"""
-        value = 2.0
-        x = AutoDiff(value, der=1, label="x")
-        f = x.exp()
-        e = 10**(-6)
-        
-        assert abs(f.der - 7.3890561) < e
+        x = AutoDiff(2, der=1, label="x")
+        y = AutoDiff(3, der=1, label="y")
+        f = ForwardFunctions([x.ln(), y.ln()])
+                
+        assert_almost_equal(f.jacobians,[[0.5,0],[0, 1/3]])
         
     def test_ln_label(self):
         """check that sin function has been correctly implemented"""
-        value = 2.0
-        x = AutoDiff(value, der=1, label="x")
-        f = x.exp()
-        assert f.label == 'x'   
+        x = AutoDiff(2, der=1, label="x")
+        y = AutoDiff(3, der=1, label="y")
+        f = ForwardFunctions([x.ln(), y.ln()])
+        assert f.labels ==  ['x','y']     
         
     ##########################################
+    # log with base
+    def test_lnb_val(self):
+        """check that sin function has been correctly implemented"""
+        x = AutoDiff(8, der=1, label="x")
+        y = AutoDiff(np.exp(1), der=1, label="y")
+        f = ForwardFunctions([x.ln_base(2), y.ln_base(np.exp(1))])
+        
+        assert np.allclose(f.values, [[3.0], [1.0]])
+        
+    def test_lnb_der(self):
+        """check that sin function has been correctly implemented"""
+        x = AutoDiff(8, der=1, label="x")
+        y = AutoDiff(np.exp(1), der=1, label="y")
+        f = ForwardFunctions([x.ln_base(2), y.ln_base(np.exp(1))])
+        
+        assert_almost_equal(f.jacobians, [[1 / (8*np.log(2)), 0], [0,1 /np.exp(1)]])
+        
+    def test_lnb_label(self):
+        """check that sin function has been correctly implemented"""
+        x = AutoDiff(8, der=1, label="x")
+        y = AutoDiff(np.exp(1), der=1, label="y")
+        f = ForwardFunctions([x.ln_base(2), y.ln_base(np.exp(1))])
+        
+        assert f.labels ==  ['x','y']     
+  
+        
+    ##########################################
+    
     # sqrt
     def test_sqrt_val(self):
         """check that sin function has been correctly implemented"""
@@ -765,55 +787,66 @@ def test_divzero_ad():
         value = 2.0
         x = AutoDiff(value, der=1, label="x")
         y = AutoDiff(0, der = 1, label = "y")
-        f = x / y # needs to raise zerodivisionerror
+        f = ForwardFunctions(x / y) # needs to raise zerodivisionerror
 
 def test_divzero_int():
     with pytest.raises(Exception) as e_info:
         value = 2.0
         x = AutoDiff(value, der=1, label="x")
-        f = x / 0 # needs to raise zerodivisionerror
+        f = ForwardFunctions(x / 0) # needs to raise zerodivisionerror
 
 def test_rdivzero():
     with pytest.raises(Exception) as e_info:
         value = 0
         x = AutoDiff(value, der=1, label="x")
-        f = 2.0 / x # needs to raise zerodivisionerror
+        f = ForwardFunctions(2.0 / x) # needs to raise zerodivisionerror
 
         
 def test_powzero_int():
     with pytest.raises(Exception) as e_info:
         value = 0.0
         x = AutoDiff(value, der=1, label="x")
-        f = x ** -2
+        f = ForwardFunctions(x ** -2)
 
 def test_rpowzero():
     with pytest.raises(Exception) as e_info:
         value = -1.0
         x = AutoDiff(value, der=1, label="x")
-        f = 0 ** x
+        f = ForwardFunctions(0 ** x)
                 
 def test_tanzero():
     with pytest.raises(Exception) as e_info:
         value = 0.5*np.pi 
         x = AutoDiff(value, der = 1, label = "x")
-        f = x.tan()
+        f = ForwardFunctions(x.tan())
         
 def test_arcsinzero():
     with pytest.raises(Exception) as e_info:
         value = -2
         x = AutoDiff(value, der = 1, label = "x")
-        f = x.arcsin()
+        f = ForwardFunctions(x.arcsin())
 
 def test_arccoszero():
     with pytest.raises(Exception) as e_info:
         value = -2
         x = AutoDiff(value, der = 1, label = "x")
-        f = x.arccos()
+        f = ForwardFunctions(x.arccos())
 
 def test_lnzero():
     with pytest.raises(Exception) as e_info:
+        value = 0
+        x = AutoDiff(value, 1, 'x')
+        f = ForwardFunctions(x.ln())
+
+def test_lnmin():
+    with pytest.raises(Exception) as e_info:
         value = -1
         x = AutoDiff(value, 1, 'x')
-        f = x.ln()
-
-    
+        f = ForwardFunctions(x.ln())    
+        
+def test_lnbasezero():    
+    with pytest.raises(Exception) as e_info:    
+        value = 2
+        x = AutoDiff(value, 1, 'x')
+        y = AutoDiff(5, 1, 'y')
+        f = ForwardFunctions([x.ln_base(0), y.ln_base(0)]) 
