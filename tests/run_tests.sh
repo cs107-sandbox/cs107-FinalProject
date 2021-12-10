@@ -5,5 +5,6 @@ tests=(
 )
 # we must add the module source path as want to test from the source directly (not a package yet)
 export PYTHONPATH="$(pwd -P)/../src":${PYTHONPATH}
+
 # run the tests
 pytest -v ${tests[@]}

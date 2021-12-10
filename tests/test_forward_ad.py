@@ -4,7 +4,6 @@ import pytest
 import numpy as np
 from numpy.testing import assert_almost_equal
 
-
 class TestFunctions:
     
     ##########################################
@@ -419,7 +418,7 @@ class TestFunctions:
     ##########################################
     # cos
     def test_cos_val(self):
-        """check that sin function has been correctly implemented"""
+        """check that cos function has been correctly implemented"""
         x = AutoDiff(np.pi / 2, der=1, label="x")
         y = AutoDiff(np.pi / 2, der=1, label="y")
         f = ForwardFunctions([x.cos(), (x + y).cos()])
@@ -428,7 +427,7 @@ class TestFunctions:
         
         
     def test_cos_der(self):
-        """check that sin function has been correctly implemented"""
+        """check that cos function has been correctly implemented"""
         x = AutoDiff(np.pi / 2, der=1, label="x")
         y = AutoDiff(np.pi / 2, der=1, label="y")
         f = ForwardFunctions([x.cos(), (x + y).cos()])
@@ -436,7 +435,7 @@ class TestFunctions:
         assert_almost_equal(f.jacobians,[[-1,0],[0,0]])        
         
     def test_cos_label(self):
-        """check that sin function has been correctly implemented"""
+        """check that cos function has been correctly implemented"""
         x = AutoDiff(np.pi / 2, der=1, label="x")
         y = AutoDiff(np.pi / 2, der=1, label="y")
         f = ForwardFunctions([x.cos(), (x + y).cos()]) 
@@ -445,14 +444,14 @@ class TestFunctions:
     ##########################################
     # tan
     def test_tan_val(self):
-        """check that sin function has been correctly implemented"""
+        """check that tan function has been correctly implemented"""
         x = AutoDiff(np.pi, der=1, label="x")
         y = AutoDiff(np.pi, der=1, label="y")
         f = ForwardFunctions([x.tan(), (x + y).tan()])
         assert_almost_equal(f.values, [[0],[0]])
         
     def test_tan_der(self):
-        """check that sin function has been correctly implemented"""
+        """check that tan function has been correctly implemented"""
         x = AutoDiff(np.pi, der=1, label="x")
         y = AutoDiff(np.pi, der=1, label="y")
         f = ForwardFunctions([x.tan(), (x + y).tan()])
@@ -461,7 +460,7 @@ class TestFunctions:
         
         
     def test_tan_label(self):
-        """check that sin function has been correctly implemented"""
+        """check that tan function has been correctly implemented"""
         x = AutoDiff(np.pi, der=1, label="x")
         y = AutoDiff(np.pi, der=1, label="y")
         f = ForwardFunctions([x.tan(), (x + y).tan()])
