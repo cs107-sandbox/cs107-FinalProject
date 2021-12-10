@@ -934,5 +934,4 @@ class ForwardFunctions():
 # z = AutoDiff(4, der=1, label="z")
 
 # x_func = ForwardFunctions([x/2, x/z, z/x])
-
 # print(x_func.values, x_func.jacobians, x_func.labels)

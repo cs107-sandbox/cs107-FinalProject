@@ -9,7 +9,6 @@ import numpy as np
 from src.ReverseAD import ReverseAD
 from src.ReverseAD import ReverseFunctions
 
-
 class TestFunctions:
     
     ##########################################

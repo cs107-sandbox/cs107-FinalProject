@@ -384,7 +384,6 @@ class ReverseFunctions():
 # x = ReverseAD(2, label="x")
 # y = ReverseAD(3, label="y")
 # z = ReverseAD(4, label="z")
-
 # print(f.vals)
 # print(f.ders)
 # print(f.vars)
