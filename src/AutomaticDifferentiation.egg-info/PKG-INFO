@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: AutomaticDifferentiation
+Version: 0.0.1
+Summary: Function Automatic Automatic Differentiation
+Home-page: https://github.com/cs107-sandbox/cs107-FinalProject
+Author: Haoming Chen, Yiting Han, Ivonne Martinez, Gahyun Sung
+Author-email: ivonne_martinez@g.harvard.edu
+License: MIT
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+file : README.md
+

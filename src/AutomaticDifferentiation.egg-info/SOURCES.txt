@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+src/AutomaticDifferentiation.egg-info/PKG-INFO
+src/AutomaticDifferentiation.egg-info/SOURCES.txt
+src/AutomaticDifferentiation.egg-info/dependency_links.txt
+src/AutomaticDifferentiation.egg-info/requires.txt
+src/AutomaticDifferentiation.egg-info/top_level.txt
