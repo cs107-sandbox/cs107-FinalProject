@@ -2,16 +2,6 @@ import numpy as np
 from collections import defaultdict
 from numpy.lib.arraysetops import isin
 
-# convert variable name to string
-
-
-# def print_var_name(variable):
-#     for name in globals():
-#         if eval(name) == variable:
-#             return name
-
-#     return None
-
 
 class ReverseAD:
 
@@ -25,7 +15,12 @@ class ReverseAD:
         local_gradients: the variable's children and corresponding local derivatives
 
         """
-        self.value = value
+        if isinstance(value, float) or isinstance(value, int):
+            self.value = value
+        else:
+            raise TypeError(
+                f'Value should be int or float and not {type(value)}')
+
         if len(local_gradients) == 0:
             self.local_gradients = [(None, 1)]
         else:
@@ -95,7 +90,15 @@ class ReverseAD:
         return self.__add__(-other)
 
     def __rsub__(self, other):
-        return self.__sub__(other)
+        if isinstance(other, int) or isinstance(other, float):
+            return ReverseAD(other - self.value, [(self, -1)])
+        elif isinstance(other, ReverseAD):
+            value = other.value - self.value
+            local_gradients = (
+                (self, -1),
+                (other, 1)
+            )
+            return ReverseAD(value, local_gradients)
 
     def __truediv__(self, other):
         if isinstance(other, int) or isinstance(other, float):
@@ -150,6 +153,8 @@ class ReverseAD:
         return ReverseAD(value, local_gradients)
 
     def tan(self):
+        if (self.value / np.pi - 0.5) % 1 == 0.00:
+            raise ValueError("Tangent cannot be applied to this value")
         value = np.tan(self.value)
         local_gradients = (
             (self, 1 / np.power(np.cos(self.value), 2)),
@@ -186,6 +191,8 @@ class ReverseAD:
         return ReverseAD(value, local_gradients)
 
     def ln(self):
+        if self.value <= 0:
+            raise ValueError("Natural log cannot be applied to this value")
         value = np.log(self.value)
         local_gradients = (
             (self, 1. / self.value),
@@ -193,6 +200,8 @@ class ReverseAD:
         return ReverseAD(value, local_gradients)
 
     def ln_base(self, base):
+        if base == 0 or base == 1:
+            raise ValueError("Base cannot be this value")
         return self.ln() / np.log(base)
 
     def sinh(self):
@@ -372,15 +381,12 @@ class ReverseFunctions():
         self.ders = np.array(all_der)
 
 
-x = ReverseAD(2, label="x")
-y = ReverseAD(3, label="y")
-z = ReverseAD(4, label="z")
+# x = ReverseAD(2, label="x")
+# y = ReverseAD(3, label="y")
+# z = ReverseAD(4, label="z")
 
-# f = ReverseFunctions([x/2, x/z, z/x], [x, y, z])
+# print(f.vals)
+# print(f.ders)
+# print(f.vars)
 
-f = ReverseFunctions([x - 3.0, x + y], [x, y])
-print(f.vals)
-print(f.ders)
-print(f.vars)
 
-# print(np.tan(2))

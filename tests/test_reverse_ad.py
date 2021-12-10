@@ -106,7 +106,7 @@ class TestFunctions:
         x = ReverseAD(2, label = "x")
         y = ReverseAD(3, label = "y")
         f = ReverseFunctions([3.0 - x, x - y, y - x],[x,y])
-        assert np.array_equal(f.vals, [-1, -1, 1])
+        assert np.array_equal(f.vals, [1, -1, 1])
 
     def test_rsub_der(self):
         """check that __radd__ has been overwritten correctly"""

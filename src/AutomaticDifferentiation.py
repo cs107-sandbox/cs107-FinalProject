@@ -846,7 +846,8 @@ class AutoDiff():
         >>> f.labels
         ['x', 'y']
         """
-
+        if base == 0:
+            raise ValueError("Base cannot be zero")
         return self.ln() / np.log(base)
 
     def exp(self):
@@ -928,10 +929,10 @@ class ForwardFunctions():
         self.labels = unique_labels
 
 
-x = AutoDiff(2, der=1, label="x")
-y = AutoDiff(3, der=1, label="y")
-z = AutoDiff(4, der=1, label="z")
+# x = AutoDiff(2, der=1, label="x")
+# y = AutoDiff(3, der=1, label="y")
+# z = AutoDiff(4, der=1, label="z")
 
-x_func = ForwardFunctions([x/2, x/z, z/x])
+# x_func = ForwardFunctions([x/2, x/z, z/x])
 
-print(x_func.values, x_func.jacobians, x_func.labels)
+# print(x_func.values, x_func.jacobians, x_func.labels)
