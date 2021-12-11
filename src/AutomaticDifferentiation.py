@@ -412,7 +412,7 @@ class AutoDiff():
         Perform the power of n
 
         -- Parameters
-        n : exponent to which self is raised
+        other : exponent to which self is raised
             type: int or AutoDiff
 
         -- Return
@@ -723,7 +723,7 @@ class AutoDiff():
 
     def arctan(self):
         """
-        Perform the arccosine
+        Perform the arctangent
 
         -- Parameters
 
