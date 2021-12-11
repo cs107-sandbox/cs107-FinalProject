@@ -5,15 +5,18 @@ from numpy.lib.arraysetops import isin
 
 class ReverseAD:
 
-    node_dict = {} # Dictionary to store the variables' labels
+    node_dict = {}  # Dictionary to store the variables' labels
 
     def __init__(self, value, local_gradients=[], label=None):
         """
 
         -- Parameters
         value : the value of the variable
+            type: int or float
         local_gradients: the variable's children and corresponding local derivatives
+            type: list
         label : variable name
+            type: string
         """
         if isinstance(value, float) or isinstance(value, int):
             self.value = value
@@ -27,6 +30,7 @@ class ReverseAD:
             self.local_gradients = local_gradients
 
         if label is not None:
+
             ReverseAD.node_dict[self] = label
 
     def __add__(self, other):
@@ -35,6 +39,7 @@ class ReverseAD:
 
         -- Parameters
         other : values to be added
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -69,6 +74,7 @@ class ReverseAD:
 
         -- Parameters
         other : values to be added
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -94,6 +100,7 @@ class ReverseAD:
 
         -- Parameters
         other : values to be multiplied to self
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -128,6 +135,7 @@ class ReverseAD:
 
         -- Parameters
         other : values to be multiplied to self
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -198,13 +206,14 @@ class ReverseAD:
             (self, -1 / self.value**2),
         )
         return ReverseAD(value, local_gradients)
-    
+
     def __sub__(self, other):
         """
         Perform subtraction
 
         -- Parameters
         other : values to be subtracted from self
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -230,6 +239,7 @@ class ReverseAD:
 
         -- Parameters
         other : values from which self is substracted
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -264,6 +274,7 @@ class ReverseAD:
 
         -- Parameters
         other : values to divide self
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -293,6 +304,7 @@ class ReverseAD:
 
         -- Parameters
         other : values to be divided by self
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -326,6 +338,7 @@ class ReverseAD:
 
         -- Parameters
         other: exponent to which self is raised
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -359,6 +372,7 @@ class ReverseAD:
 
         -- Parameters
         other : number to be raised
+            type: int or float or ReverseAD
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -536,6 +550,8 @@ class ReverseAD:
         Perform the logarithm with a specific base
 
         -- Parameters
+        base: number to be raised
+            type: int
 
         -- Return
         An ReverseAD object with calculated values, variable's children and local derivatives.
@@ -641,7 +657,6 @@ class ReverseAD:
         )
         return ReverseAD(value, local_gradients)
 
-
     def arcsin(self):
         """
         Perform the arcsine
@@ -701,7 +716,6 @@ class ReverseAD:
             (self, -1 / (1 - self.value ** 2) ** 0.5),
         )
         return ReverseAD(value, local_gradients)
-   
 
     def arctan(self):
         """
@@ -792,19 +806,22 @@ class ReverseAD:
         def compute_gradients(self, path_value):
 
             for child_variable, local_gradient in self.local_gradients:
+                # print(child_variable.value)
                 # "Multiply the edges of a path":
                 value_of_path_to_child = path_value * local_gradient
                 # "Add together the different paths":
                 if child_variable == None:
                     # Escape condition (reach leaf nodes)
-                    gradients[self] = 1 * value_of_path_to_child
+                    # gradients[self] += 1 * value_of_path_to_child
+                    return
                 else:
-
                     gradients[child_variable] += value_of_path_to_child
-                # recurse through graph:
-                    compute_gradients(child_variable, value_of_path_to_child)
+
+            # recurse through graph:
+                compute_gradients(child_variable, value_of_path_to_child)
 
         compute_gradients(self, path_value=1)
+        print(gradients)
         # (path_value=1 is from `variable` differentiated w.r.t. itself)
 
         return gradients
@@ -812,23 +829,41 @@ class ReverseAD:
 
 class ReverseFunctions():
     def __init__(self, functions, variables=[]):
+        """
+        -- Parameters
+        functions : a list of evaluated functions 
+            type: list of ReverseAD object or int (float)
+        variables: a list of used variable used in the function
+            type: list of reverseAD (input variable)
+
+        """
 
         values = []
         for function in functions:
+            # if function is of type ReverseAD
             try:
                 values.append(function.value)
+            # if function is a constant number
             except AttributeError:
-                values.append(function)  # constant
+                values.append(function)
 
         all_der = []
         for function in functions:
             curr_der = []
-            curr_grad = function.get_gradients()
-            for var in variables:
-                if var not in curr_grad:
+            # if function is not constant
+            try:
+                curr_grad = function.get_gradients()
+                for var in variables:
+                    # if a variable is not used in a function
+                    if var not in curr_grad:
+                        curr_der.append(0)
+                        continue
+                    # add the derivate of a variable stored in the curr_grad (dictionary)
+                    curr_der.append(curr_grad[var])
+            # if function is constant
+            except:
+                for var in variables:
                     curr_der.append(0)
-                    continue
-                curr_der.append(curr_grad[var])
 
             all_der.append(curr_der)
 
@@ -839,11 +874,14 @@ class ReverseFunctions():
         self.ders = np.array(all_der)
 
 
-# x = ReverseAD(2, label="x")
+# x = ReverseAD(4, label="x")
 # y = ReverseAD(3, label="y")
-# z = ReverseAD(4, label="z")
-# print(f.vals)
-# print(f.ders)
+# # z = ReverseAD(4, label="z")
+# print(x)
+# print(y)
+# z = x * (x + y)
+# # f = ReverseFunctions([x * (x + y)], [x, y])
+# print(z.value)
+# print(z.get_gradients())
+
 # print(f.vars)
-
-

@@ -7,10 +7,10 @@ class AutoDiff():
         Constructs an AD object
 
         -- Parameters
-        value : value of input variables
+        val : value of input variables, the input value can be int,float or numpy arrays, but later will be converted to two-dimensional array
             type: two-dimensional array
         der :  derivatives with respect to each variable, default is set to 1.0
-            type: two-dimension array
+            type: two-dimensional array
         label : variable name, default is set to "".
             type: list
 
@@ -22,7 +22,8 @@ class AutoDiff():
         >>> a = 2.0  # Value to evaluate at
         >>> x = AutoDiff(a, der=1, label="x")
         """
-        # convert val tp two-dimensional array
+
+        # convert val to two-dimensional array
         if isinstance(val, float) or isinstance(val, int):
             value = np.array(val, dtype=np.float64).reshape(1, -1)
         elif isinstance(val, np.ndarray):
@@ -933,5 +934,6 @@ class ForwardFunctions():
 # y = AutoDiff(3, der=1, label="y")
 # z = AutoDiff(4, der=1, label="z")
 
-# x_func = ForwardFunctions([x/2, x/z, z/x])
+# x_func = ForwardFunctions([x*(x + y) + (y - x).ln() * x ** 2, x *(x + y)], [x, y])
+
 # print(x_func.values, x_func.jacobians, x_func.labels)
