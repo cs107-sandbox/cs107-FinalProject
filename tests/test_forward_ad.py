@@ -1,5 +1,5 @@
-from src.AutomaticDifferentiation import AutoDiff
-from src.AutomaticDifferentiation import ForwardFunctions
+from src.AutomaticDifferentiation.AutomaticDifferentiation import AutoDiff
+from src.AutomaticDifferentiation.AutomaticDifferentiation import ForwardFunctions
 import pytest
 import numpy as np
 from numpy.testing import assert_almost_equal
