@@ -6,8 +6,8 @@ Created on Mon Dec  6 19:54:46 2021
 """
 import pytest
 import numpy as np
-from src.ReverseAD import ReverseAD
-from src.ReverseAD import ReverseFunctions
+from src.AutomaticDifferentiation.ReverseAD import ReverseAD
+from src.AutomaticDifferentiation.ReverseAD import ReverseFunctions
 
 class TestFunctions:
     
